@@ -1,6 +1,9 @@
-infra:
-  build: .
-  volumes:
-    - .:/infra
-    - .aws:/root/.aws
-    - ~/.ssh:/root/.ssh
+version: "3.7"
+
+services:
+  infra:
+    build: .
+    volumes:
+      - .:/infra
+      - .aws:/root/.aws
+      - ~/.ssh:/root/.ssh
