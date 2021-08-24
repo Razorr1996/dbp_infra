@@ -6,4 +6,4 @@ services:
     volumes:
       - .:/infra
       - .aws:/root/.aws
-      - ~/.ssh:/root/.ssh
+#      - ~/.ssh:/root/.ssh
