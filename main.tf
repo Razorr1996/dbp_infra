@@ -11,7 +11,7 @@ terraform {
 
 provider "aws" {
   profile = "default"
-  region = "us-east-1"
+  region  = "us-east-1"
 }
 
 locals {
@@ -20,7 +20,7 @@ locals {
 }
 
 resource "aws_instance" "app_server" {
-  ami = local.instance_ami
+  ami           = local.instance_ami
   instance_type = "t2.micro"
 
   tags = {
