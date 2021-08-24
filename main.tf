@@ -16,14 +16,14 @@ terraform {
 
 provider "aws" {
   profile = "default"
-  region  = "us-east-1"
+  region  = "eu-central-1"
 }
 
 provider "ct" {}
 
 locals {
   # FEDORA-COREOS
-  instance_ami = "ami-09e2e5104f310ffb5"
+  instance_ami = "ami-06a0c31e4cba0c54d"
 
   instance_key_file = "ssh_keys/id_rsa_instance_key.pub"
   instance_user     = "core"
