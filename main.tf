@@ -9,6 +9,11 @@ terraform {
       source  = "poseidon/ct"
       version = "0.9.0"
     }
+
+    docker = {
+      source  = "kreuzwerker/docker"
+      version = "2.15.0"
+    }
   }
 
   required_version = ">= 0.15.3"
@@ -21,12 +26,18 @@ provider "aws" {
 
 provider "ct" {}
 
+provider "docker" {
+  host = "ssh://${local.instance_user}@${aws_instance.app_server.public_ip}:22"
+}
+
 locals {
   # FEDORA-COREOS
   instance_ami = "ami-06a0c31e4cba0c54d"
 
   instance_key_file = "ssh_keys/id_rsa_instance_key.pub"
   instance_user     = "core"
+
+  image = "basa62/ruby_web:latest"
 }
 
 resource "aws_instance" "app_server" {
@@ -41,6 +52,24 @@ resource "aws_instance" "app_server" {
 
   tags = {
     Name = "Study AppServer"
+  }
+}
+
+resource "docker_image" "app" {
+  name = local.image
+}
+
+resource "docker_container" "app" {
+  image = docker_image.app.latest
+  name  = "app"
+
+  env = [
+    "PORT=4000",
+  ]
+
+  ports {
+    internal = 4000
+    external = 80
   }
 }
 
