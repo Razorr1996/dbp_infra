@@ -3,6 +3,11 @@ variable "region" {
   type        = string
 }
 
+variable "env" {
+  description = "environment"
+  type        = string
+}
+
 variable "image" {
   description = "container image you will run on the instance"
   type        = string

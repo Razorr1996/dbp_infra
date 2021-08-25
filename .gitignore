@@ -123,4 +123,3 @@ build-iPhoneSimulator/
 ## Artem
 .idea
 **/.terraform
-.terraform.lock.hcl
