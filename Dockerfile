@@ -17,7 +17,8 @@ RUN apk -v --update add \
 RUN mkdir -p /infra
 WORKDIR /infra
 
-RUN echo 'alias t=terraform' > ~/.bashrc && \
+RUN echo 'alias t=terraform' >> ~/.bashrc && \
+    echo 'eval `ssh-agent -s`' >> ~/.bashrc && \
     terraform -install-autocomplete
 
 ENTRYPOINT "bash"

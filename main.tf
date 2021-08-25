@@ -37,7 +37,7 @@ locals {
   instance_key_file = "ssh_keys/id_rsa_instance_key.pub"
   instance_user     = "core"
 
-  image = "basa62/ruby_web:latest"
+  image = "basa62/ruby_web_amd64:latest"
 }
 
 resource "aws_instance" "app_server" {
@@ -55,13 +55,23 @@ resource "aws_instance" "app_server" {
   }
 }
 
+resource "aws_eip" "eip" {
+  vpc = true
+}
+
+resource "aws_eip_association" "eip_assoc" {
+  instance_id   = aws_instance.app_server.id
+  allocation_id = aws_eip.eip.id
+}
+
 resource "docker_image" "app" {
   name = local.image
 }
 
 resource "docker_container" "app" {
-  image = docker_image.app.latest
-  name  = "app"
+  image   = docker_image.app.latest
+  name    = "app"
+  restart = "unless-stopped"
 
   env = [
     "PORT=4000",
