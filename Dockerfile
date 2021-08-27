@@ -17,6 +17,8 @@ RUN apk -v --update add \
 RUN mkdir -p /infra
 WORKDIR /infra
 
+ENV PS1 '\[\033[1;37m\]($(echo `terraform workspace show`)) \[\033[1;33m\]\u \[\033[1;36m\]\h \[\033[1;34m\]\w\[\033[0;35m\] \[\033[1;36m\]# \[\033[0m\]'
+
 RUN echo 'alias t=terraform' >> ~/.bashrc && \
     echo 'eval `ssh-agent -s`' >> ~/.bashrc && \
     terraform -install-autocomplete
