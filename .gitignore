@@ -124,3 +124,6 @@ build-iPhoneSimulator/
 .idea
 **/.terraform
 ssh_keys
+secrets.tfvars
+terraform.tfstate.d
+tfvars
