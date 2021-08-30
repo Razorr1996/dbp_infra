@@ -18,3 +18,8 @@ module "app" {
   name        = var.name
   environment = var.environment
 }
+
+module "role" {
+  source      = "./modules/ecs_roles"
+  environment = var.environment
+}
