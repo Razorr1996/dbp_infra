@@ -1,8 +1,3 @@
-variable "region" {
-  description = "aws region"
-  type        = string
-}
-
 variable "cidr" {
   description = "The CIDR block for the VPC."
 }
