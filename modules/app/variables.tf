@@ -21,3 +21,15 @@ variable "task_cpu" {
 variable "task_memory" {
   description = "App memory"
 }
+
+variable "vpc_id" {
+  description = "Target VPC ID"
+}
+
+variable "public_subnets" {
+  description = "Public subnets"
+}
+
+variable "alb_sg" {
+  description = "List of SG for ALB"
+}
