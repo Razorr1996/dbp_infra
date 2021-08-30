@@ -8,7 +8,13 @@ module "network" {
 
 module "security_groups" {
   source         = "./modules/security_groups"
-  name           = "${var.project}-${var.environment}"
+  name           = "${var.name}-${var.environment}"
   vpc_id         = module.network.vpc_id
   container_port = var.container_port
+}
+
+module "app" {
+  source      = "./modules/app"
+  name        = var.name
+  environment = var.environment
 }
