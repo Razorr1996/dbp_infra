@@ -6,6 +6,7 @@ locals {
 inputs = {
   region = local.common.inputs.region
   name = local.common.inputs.project
+  project = local.common.inputs.project
   environment = local.workspace
 }
 
