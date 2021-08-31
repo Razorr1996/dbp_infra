@@ -14,15 +14,16 @@ module "security_groups" {
 }
 
 module "app" {
-  source         = "./modules/app"
-  name           = var.name
-  environment    = var.environment
-  task_cpu       = var.task_cpu
-  task_memory    = var.task_memory
-  image          = var.image
-  container_port = var.container_port
-  vpc_id         = module.network.vpc_id
-  public_subnets = module.network.public_subnets
-  //  ecs_sg         = [module.security_groups.ecs_tasks]
-  alb_sg = [module.security_groups.alb]
+  source          = "./modules/app"
+  name            = var.name
+  environment     = var.environment
+  task_cpu        = var.task_cpu
+  task_memory     = var.task_memory
+  image           = var.image
+  container_port  = var.container_port
+  vpc_id          = module.network.vpc_id
+  public_subnets  = module.network.public_subnets
+  ecs_sg          = [module.security_groups.ecs_tasks]
+  alb_sg          = [module.security_groups.alb]
+  private_subnets = module.network.private_subnets
 }

@@ -33,3 +33,11 @@ variable "public_subnets" {
 variable "alb_sg" {
   description = "List of SG for ALB"
 }
+
+variable "ecs_sg" {
+  description = "List of SG for ECS"
+}
+
+variable "private_subnets" {
+  description = "Private subnets"
+}
