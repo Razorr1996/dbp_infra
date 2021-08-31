@@ -46,3 +46,11 @@ variable "ecs_sg" {
 variable "private_subnets" {
   description = "Private subnets"
 }
+
+variable "variables" {
+  description = "Variables for app"
+}
+
+variable "secrets" {
+  description = "Secrets for app"
+}

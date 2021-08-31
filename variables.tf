@@ -42,3 +42,7 @@ variable "task_cpu" {
 variable "task_memory" {
   description = "App memory"
 }
+
+variable "secrets" {
+  description = "Secrets for app"
+}
