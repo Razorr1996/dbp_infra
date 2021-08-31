@@ -6,6 +6,11 @@ variable "environment" {
   description = "Environment name"
 }
 
+variable "region" {
+  description = "AWS region"
+  type        = string
+}
+
 variable "container_port" {
   description = "Listen container port"
 }
