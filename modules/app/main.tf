@@ -113,3 +113,14 @@ module "autoscaling" {
   max_capacity          = 4
   min_capacity          = 1
 }
+
+module "dashboard" {
+  source           = "../dashboard"
+  name             = var.name
+  environment      = var.environment
+  region           = var.region
+  cluster_name     = module.cluster.name
+  service_name     = module.service.name
+  alb_arn          = module.alb.alb_arn_suffix
+  target_group_arn = module.alb.tg_arn_suffix
+}
