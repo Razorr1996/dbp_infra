@@ -122,6 +122,7 @@ build-iPhoneSimulator/
 
 ## Artem
 .idea
+*.iml
 **/.terraform
 ssh_keys
 secrets.tfvars
