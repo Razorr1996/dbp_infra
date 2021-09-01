@@ -73,6 +73,7 @@ module "alb" {
   security_groups   = var.alb_sg
   subnets           = var.public_subnets
   vpc_id            = var.vpc_id
+  certificate_arn   = data.aws_acm_certificate.cert.arn
   health_check_path = "/health_check"
 }
 
@@ -128,4 +129,17 @@ module "dashboard" {
   service_name     = module.service.name
   alb_arn          = module.alb.alb_arn_suffix
   target_group_arn = module.alb.tg_arn_suffix
+}
+
+data "aws_acm_certificate" "cert" {
+  domain   = var.domain
+  statuses = ["ISSUED"]
+}
+
+module "dns" {
+  source       = "../dns"
+  domain       = var.domain
+  alb_dns_name = module.alb.alb_dns_name
+  alb_zone_id  = module.alb.alb_zone_id
+  environment  = var.environment
 }

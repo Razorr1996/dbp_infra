@@ -24,6 +24,7 @@ module "app" {
   name        = var.name
   environment = var.environment
   region      = var.region
+  domain      = var.domain
 
   task_cpu        = var.task_cpu
   task_memory     = var.task_memory

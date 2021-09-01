@@ -11,6 +11,10 @@ variable "region" {
   type        = string
 }
 
+variable "domain" {
+  description = "Domain for using in project"
+}
+
 variable "container_port" {
   description = "Listen container port"
 }

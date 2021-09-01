@@ -21,3 +21,7 @@ variable "subnets" {
 variable "health_check_path" {
   description = "Health check path in resource"
 }
+
+variable "certificate_arn" {
+  description = "HTTPS Certificate ARN"
+}

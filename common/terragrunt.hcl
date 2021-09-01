@@ -1,11 +1,13 @@
 locals {
   region = "eu-central-1"
   project = "dbp-learn-prj" // это пример, можете использовать ваше название
+  domain = "infra.basa62.ru"
 }
 
 inputs = {
   region = local.region
   project = local.project
+  domain = local.domain
 }
 
 remote_state {

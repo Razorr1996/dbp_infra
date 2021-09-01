@@ -11,6 +11,10 @@ variable "region" {
   type        = string
 }
 
+variable "domain" {
+  description = "Domain for using in project"
+}
+
 variable "cidr" {
   description = "The CIDR block for the VPC."
 }
