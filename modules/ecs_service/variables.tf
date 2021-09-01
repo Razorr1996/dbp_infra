@@ -53,3 +53,7 @@ variable "container_port" {
 variable "container_name" {
   description = "Container name"
 }
+
+variable "enable_execute_command" {
+  description = "Enable exec in service"
+}

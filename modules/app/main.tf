@@ -58,6 +58,10 @@ module "task_definition" {
           awslogs-stream-prefix = local.app_name
         }
       }
+
+      linuxParameters = {
+        initProcessEnabled = true
+      }
     }
   ])
 }
@@ -88,6 +92,7 @@ module "service" {
   aws_alb_target_group_arn = module.alb.tg_arn
   container_port           = var.container_port
   container_name           = local.app_name
+  enable_execute_command   = true
 }
 
 module "variables" {
