@@ -1,69 +1,89 @@
-resource "aws_iam_user" "ecs_exec" {
-  name = "ecs-exec"
-}
-
-resource "aws_iam_access_key" "ecs_exec" {
-  user = aws_iam_user.ecs_exec.name
-}
-
-resource "aws_iam_user_policy" "ecs_exec" {
-  name = "ecs_exec"
-  user = aws_iam_user.ecs_exec.name
-
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Sid    = "AccessECSEXEC"
-        Action = [
-          "ecs:ListClusters",
-          "ecs:ListTasks",
-          "ecs:DescribeTasks",
-          "ecs:DescribeClusters",
-          "iam:SimulatePrincipalPolicy",
-          "ecs:DescribeTaskDefinition",
-          "ecs:ExecuteCommand",
-        ]
-        Resource = "*"
-      },
-    ]
-  })
-}
-
-resource "aws_route53_zone" "zone" {
-  name = var.domain
-}
-
-resource "aws_acm_certificate" "wildcard" {
-  domain_name               = var.domain
-  subject_alternative_names = ["*.${var.domain}"]
-  validation_method         = "DNS"
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_route53_record" "validation" {
-  for_each = {
-    for dvo in aws_acm_certificate.wildcard.domain_validation_options : dvo.domain_name => {
-      name   = dvo.resource_record_name
-      record = dvo.resource_record_value
-      type   = dvo.resource_record_type
+locals {
+  gitlab_variables = {
+    AWS_ACCESS_KEY_ID = {
+      value     = module.iam.access_keys.gitlab.id
+      masked    = true
+      protected = false
+    }
+    AWS_SECRET_ACCESS_KEY = {
+      value     = module.iam.access_keys.gitlab.secret
+      masked    = true
+      protected = false
+    }
+    AWS_DEFAULT_OUTPUT = {
+      value     = "json"
+      masked    = false
+      protected = false
+    }
+    AWS_DEFAULT_REGION = {
+      value     = var.region
+      masked    = false
+      protected = false
+    }
+    PROJECT = {
+      value     = var.project
+      masked    = false
+      protected = false
+    }
+    APPLICATION = {
+      value     = var.application
+      masked    = false
+      protected = false
+    }
+    TOOLBOX_IMAGE = {
+      value     = "partos/ecs_toolbox"
+      masked    = false
+      protected = false
     }
   }
-
-  allow_overwrite = true
-  name            = each.value.name
-  type            = each.value.type
-  records         = [each.value.record]
-  ttl             = 60
-  zone_id         = aws_route53_zone.zone.id
 }
 
-resource "aws_acm_certificate_validation" "validation" {
-  certificate_arn         = aws_acm_certificate.wildcard.arn
-  validation_record_fqdns = [for record in aws_route53_record.validation : record.fqdn]
+module "iam" {
+  source = "./modules/iam"
+  groups = var.groups
+  users  = var.users
+}
+
+module "gitlab" {
+  source       = "./modules/gitlab"
+  project      = var.gitlab_project
+  variables    = local.gitlab_variables
+  access_token = var.gitlab_access_token
+}
+
+module "dns" {
+  source = "./modules/dns"
+  domain = var.domain
+}
+
+module "ecr" {
+  source = "./modules/ecr"
+
+  for_each       = var.containers
+  name           = "${var.project}-${var.application}-${each.value.name}"
+  amount_to_keep = 30
+}
+
+resource "aws_default_vpc" "default" {}
+
+resource "aws_default_subnet" "default_az" {
+  availability_zone = "${var.region}a"
+}
+
+module "gitlabci" {
+  source = "./modules/gitlabci"
+
+  vpc_id                           = aws_default_vpc.default.id
+  subnet_ids_gitlab_runner         = [aws_default_subnet.default_az.id]
+  subnet_id_runners                = aws_default_subnet.default_az.id
+  region                           = var.region
+  ci_prefix                        = var.project
+  environment                      = "ci"
+  gitlab_runner_version            = "14.2.0"
+  docker_machine_instance_type     = "t2.micro"
+  instance_type                    = "t3.micro"
+  gitlab_runner_registration_token = module.gitlab.project.runners_token
+  locked_to_project                = true
+  run_untagged                     = false
+  maximum_timeout                  = "7200"
 }
