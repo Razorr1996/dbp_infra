@@ -1,13 +1,13 @@
 locals {
   workspace = run_cmd("--terragrunt-quiet", "terraform", "workspace", "show")
-  common = read_terragrunt_config("common/terragrunt.hcl")
+  common    = read_terragrunt_config("common/terragrunt.hcl")
 }
 
 inputs = {
-  region = local.common.inputs.region
-  name = local.common.inputs.project
+  region      = local.common.inputs.region
+  name        = local.common.inputs.project
   environment = local.workspace
-  domain = local.common.inputs.domain
+  domain      = local.common.inputs.domain
 }
 
 remote_state = local.common.remote_state

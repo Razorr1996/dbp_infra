@@ -1,24 +1,24 @@
 locals {
-  workspace = run_cmd("--terragrunt-quiet", "terraform", "workspace", "show")
-  region = "eu-central-1"
-  project = "dbp-learn-prj" // это пример, можете использовать ваше название
+  workspace   = run_cmd("--terragrunt-quiet", "terraform", "workspace", "show")
+  region      = "eu-central-1"
+  project     = "dbp-learn-prj" // это пример, можете использовать ваше название
   application = "app"
   containers = {
     web = {
       name = "web"
     }
   }
-  domain = "infra.basa62.ru"
-  bucket = "${local.project}-tf"
+  domain         = "infra.basa62.ru"
+  bucket         = "${local.project}-tf"
   dynamodb_table = "${local.project}-lock"
 }
 
 inputs = {
-  region = local.region
-  project = local.project
+  region      = local.region
+  project     = local.project
   application = local.application
-  containers = local.containers
-  domain = local.domain
+  containers  = local.containers
+  domain      = local.domain
 }
 
 remote_state {
@@ -30,7 +30,7 @@ remote_state {
   config = {
     bucket = local.bucket
 
-    key = "terraform.tfstate"
+    key            = "terraform.tfstate"
     region         = local.region
     encrypt        = true
     dynamodb_table = local.dynamodb_table
