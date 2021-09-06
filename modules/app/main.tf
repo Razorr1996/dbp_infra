@@ -4,7 +4,7 @@ locals {
 
 module "cluster" {
   source      = "../ecs_cluster"
-  name        = var.name
+  name        = var.project
   environment = var.environment
 }
 
@@ -16,14 +16,14 @@ module "roles" {
 
 module "logs" {
   source      = "../cloudwatch"
-  name        = var.name
+  name        = var.project
   environment = var.environment
 }
 
 module "task_definition" {
   source                   = "../ecs_task_definition"
   environment              = var.environment
-  name                     = var.name
+  name                     = "${var.project}-${var.application}"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = var.task_cpu
@@ -32,7 +32,7 @@ module "task_definition" {
   task_role_arn            = module.roles.task_role_arn
   container_definitions = jsonencode([
     {
-      name      = local.app_name
+      name      = var.containers.web.name
       image     = var.image
       essential = true
       links     = []
@@ -55,7 +55,7 @@ module "task_definition" {
         options = {
           awslogs-group         = module.logs.name
           awslogs-region        = var.region
-          awslogs-stream-prefix = local.app_name
+          awslogs-stream-prefix = var.containers.web.name
         }
       }
 
@@ -68,7 +68,7 @@ module "task_definition" {
 
 module "alb" {
   source            = "../alb"
-  name              = var.name
+  name              = var.project
   environment       = var.environment
   security_groups   = var.alb_sg
   subnets           = var.public_subnets
@@ -79,7 +79,7 @@ module "alb" {
 
 module "service" {
   source                   = "../ecs_service"
-  name                     = var.name
+  name                     = "${var.project}-${var.application}"
   environment              = var.environment
   cluster_id               = module.cluster.id
   task_definition_arn      = module.task_definition.arn
@@ -92,7 +92,7 @@ module "service" {
   subnets                  = var.private_subnets
   aws_alb_target_group_arn = module.alb.tg_arn
   container_port           = var.container_port
-  container_name           = local.app_name
+  container_name           = var.containers.web.name
   enable_execute_command   = true
 }
 
@@ -103,7 +103,7 @@ module "variables" {
 
 module "secrets" {
   source      = "../secrets"
-  name        = var.name
+  name        = var.project
   environment = var.environment
   secrets     = var.secrets
 }
@@ -122,7 +122,7 @@ module "autoscaling" {
 
 module "dashboard" {
   source           = "../dashboard"
-  name             = var.name
+  name             = var.project
   environment      = var.environment
   region           = var.region
   cluster_name     = module.cluster.name

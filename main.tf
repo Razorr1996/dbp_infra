@@ -14,14 +14,16 @@ module "network" {
 
 module "security_groups" {
   source         = "./modules/security_groups"
-  name           = "${var.name}-${var.environment}"
+  name           = "${var.project}-${var.environment}"
   vpc_id         = module.network.vpc_id
   container_port = var.container_port
 }
 
 module "app" {
   source      = "./modules/app"
-  name        = var.name
+  project     = var.project
+  application = var.application
+  containers  = var.containers
   environment = var.environment
   region      = var.region
   domain      = var.domain

@@ -5,9 +5,11 @@ locals {
 
 inputs = {
   region      = local.common.inputs.region
-  name        = local.common.inputs.project
-  environment = local.workspace
+  project     = local.common.inputs.project
+  application = local.common.inputs.application
+  containers  = local.common.inputs.containers
   domain      = local.common.inputs.domain
+  environment = local.workspace
 }
 
 remote_state = local.common.remote_state

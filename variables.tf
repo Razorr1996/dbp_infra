@@ -1,4 +1,4 @@
-variable "name" {
+variable "project" {
   description = "Project name"
 }
 
@@ -13,6 +13,16 @@ variable "region" {
 
 variable "domain" {
   description = "Domain for using in project"
+}
+
+variable "application" {
+  description = "Application name"
+  type        = string
+}
+
+variable "containers" {
+  description = "Containers"
+  type        = map(object({ name = string }))
 }
 
 variable "cidr" {

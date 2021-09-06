@@ -1,4 +1,4 @@
-variable "name" {
+variable "project" {
   description = "Project name"
 }
 
@@ -57,4 +57,14 @@ variable "variables" {
 
 variable "secrets" {
   description = "Secrets for app"
+}
+
+variable "containers" {
+  description = "Containers"
+  type        = map(object({ name = string }))
+}
+
+variable "application" {
+  description = "Application name"
+  type        = string
 }
