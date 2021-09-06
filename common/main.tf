@@ -80,7 +80,7 @@ module "gitlabci" {
   ci_prefix                        = var.project
   environment                      = "ci"
   gitlab_runner_version            = "14.2.0"
-  docker_machine_instance_type     = "t2.micro"
+  docker_machine_instance_type     = "t3.micro"
   instance_type                    = "t3.micro"
   gitlab_runner_registration_token = module.gitlab.project.runners_token
   locked_to_project                = true
