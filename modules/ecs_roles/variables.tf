@@ -5,3 +5,7 @@ variable "environment" {
 variable "secrets_arn" {
   description = "ARN for secrets"
 }
+
+variable "kms_key_arn" {
+  description = "ARN for KMS encryption key"
+}
