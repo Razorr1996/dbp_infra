@@ -87,3 +87,8 @@ module "gitlabci" {
   run_untagged                     = false
   maximum_timeout                  = "7200"
 }
+
+module "cloudtrail" {
+  source = "./modules/cloudtrail"
+  prefix = var.project
+}
