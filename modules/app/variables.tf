@@ -57,6 +57,7 @@ variable "variables" {
 
 variable "secrets" {
   description = "Secrets for app"
+  type        = map(string)
 }
 
 variable "containers" {

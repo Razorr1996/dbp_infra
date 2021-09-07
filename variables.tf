@@ -59,4 +59,5 @@ variable "task_memory" {
 
 variable "secrets" {
   description = "Secrets for app"
+  type        = map(string)
 }

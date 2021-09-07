@@ -1,11 +1,9 @@
-variable "name" {
-  description = "Project name"
-}
-
-variable "environment" {
-  description = "Environment name"
+variable "ssm_key_prefix" {
+  description = "SSM key prefix"
+  type        = string
 }
 
 variable "secrets" {
   description = "Secrets"
+  type        = map(string)
 }
