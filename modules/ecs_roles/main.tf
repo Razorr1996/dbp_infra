@@ -51,9 +51,11 @@ resource "aws_iam_policy" "secrets" {
         Effect = "Allow"
         Sid    = "AccessSecrets"
         Action = [
+          "ssm:GetParameters",
           "secretsmanager:GetSecretValue",
+          "kms:Decrypt"
         ]
-        Resource = var.secrets_arn
+        Resource = concat(var.secrets_arn, [var.kms_key_arn])
       },
     ]
   })

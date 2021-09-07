@@ -12,6 +12,7 @@ module "roles" {
   source      = "../ecs_roles"
   environment = var.environment
   secrets_arn = module.secrets.arn
+  kms_key_arn = module.secrets.kms_key_arn
 }
 
 module "logs" {
