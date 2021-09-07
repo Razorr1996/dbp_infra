@@ -15,9 +15,10 @@ module "roles" {
 }
 
 module "logs" {
-  source      = "../cloudwatch"
-  name        = var.project
-  environment = var.environment
+  source                 = "../cloudwatch"
+  name                   = var.project
+  environment            = var.environment
+  logs_retention_in_days = 5
 }
 
 module "task_definition" {
