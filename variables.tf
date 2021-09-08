@@ -13,6 +13,7 @@ variable "region" {
 
 variable "domain" {
   description = "Domain for using in project"
+  type        = string
 }
 
 variable "application" {
@@ -60,4 +61,9 @@ variable "task_memory" {
 variable "secrets" {
   description = "Secrets for app"
   type        = map(string)
+}
+
+variable "openvpn_users" {
+  description = "OpenVPN users"
+  type        = list(string)
 }

@@ -40,3 +40,15 @@ module "app" {
   variables       = local.variables
   secrets         = var.secrets
 }
+
+module "vpn" {
+  source                = "./modules/vpn"
+  domain                = var.domain
+  vpn_domain            = "vpn.${var.environment}.${var.domain}"
+  subnet_id             = module.network.public_subnets[0].id
+  security_groups       = module.security_groups
+  users                 = var.openvpn_users
+  ovpn_config_directory = "generated/vpn/${var.environment}"
+  vpn_pem_file          = "generated/ssh_keys/vpn-${var.environment}.pem"
+  instance_type         = "t3.micro"
+}
