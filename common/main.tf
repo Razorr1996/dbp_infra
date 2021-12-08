@@ -1,15 +1,5 @@
 locals {
   gitlab_variables = {
-    AWS_ACCESS_KEY_ID = {
-      value     = module.iam.access_keys.gitlab.id
-      masked    = true
-      protected = false
-    }
-    AWS_SECRET_ACCESS_KEY = {
-      value     = module.iam.access_keys.gitlab.secret
-      masked    = true
-      protected = false
-    }
     AWS_DEFAULT_OUTPUT = {
       value     = "json"
       masked    = false

@@ -17,6 +17,61 @@ resource "aws_key_pair" "ci" {
   }
 }
 
+resource "aws_iam_policy" "ci_deploy_policy" {
+  name        = "${var.environment}-deploy"
+  description = "Add access to ECS/ECR for CI/CD process"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ec2:DescribeSubnets",
+          "ec2:DescribeVpcEndpoints",
+          "ecr-public:BatchCheckLayerAvailability",
+          "ecr-public:BatchGetImage",
+          "ecr-public:CompleteLayerUpload",
+          "ecr-public:DescribeImages",
+          "ecr-public:DescribeRepositories",
+          "ecr-public:GetAuthorizationToken",
+          "ecr-public:GetDownloadUrlForLayer",
+          "ecr-public:InitiateLayerUpload",
+          "ecr-public:ListImages",
+          "ecr-public:PutImage",
+          "ecr-public:UploadLayerPart",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:BatchGetImage",
+          "ecr:CompleteLayerUpload",
+          "ecr:DescribeImages",
+          "ecr:DescribeRepositories",
+          "ecr:GetAuthorizationToken",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:InitiateLayerUpload",
+          "ecr:ListImages",
+          "ecr:PutImage",
+          "ecr:UploadLayerPart",
+          "ecs:DeregisterTaskDefinition",
+          "ecs:DescribeClusters",
+          "ecs:DescribeServices",
+          "ecs:DescribeTaskDefinition",
+          "ecs:DescribeTasks",
+          "ecs:ExecuteCommand",
+          "ecs:ListClusters",
+          "ecs:ListServices",
+          "ecs:ListTaskDefinitions",
+          "ecs:ListTasks",
+          "ecs:RegisterTaskDefinition",
+          "ecs:RunTask",
+          "ecs:UpdateService",
+          "iam:PassRole",
+          "sts:GetServiceBearerToken",
+        ]
+        Resource = "*"
+      },
+    ]
+  })
+}
+
 module "gitlab-runner" {
   source  = "npalm/gitlab-runner/aws"
   version = "4.25.0"
@@ -50,8 +105,10 @@ module "gitlab-runner" {
     }
   ]
 
-  gitlab_runner_version        = var.gitlab_runner_version
-  docker_machine_instance_type = var.docker_machine_instance_type
-  instance_type                = var.instance_type
-  runners_use_private_address  = false
+  gitlab_runner_version          = var.gitlab_runner_version
+  docker_machine_instance_type   = var.docker_machine_instance_type
+  instance_type                  = var.instance_type
+  runners_use_private_address    = false
+  runner_iam_policy_arns         = [aws_iam_policy.ci_deploy_policy.arn]
+  docker_machine_iam_policy_arns = [aws_iam_policy.ci_deploy_policy.arn]
 }
